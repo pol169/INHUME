@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INHUME - Global Industrial Archive</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Jura:wght@700&display=swap');
+
+        :root {
+            --bg-color: #060a06;
+            --text-color: #9ab39c;
+            --accent-color: #4ade80;
+            --border-color: #166534;
+            --paper-color: #052e16;
+            --sidebar-color: #064e3b;
+            --highlight: #22c55e;
+            --danger: #ef4444;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Courier Prime', monospace;
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(74, 222, 128, 0.05) 0%, transparent 80%),
+                linear-gradient(rgba(6, 78, 59, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 78, 59, 0.1) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+        }
+
+        .document-container {
+            max-width: 1200px;
+            width: 100%;
+            background-color: rgba(2, 6, 23, 0.9);
+            padding: 4rem;
+            box-shadow: 0 0 100px rgba(0, 0, 0, 1), inset 0 0 30px var(--border-color);
+            border: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        .header-block {
+            border-bottom: 4px double var(--accent-color);
+            padding-bottom: 2rem;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .company-logo {
+            font-family: 'Jura', sans-serif;
+            font-size: 3.5rem;
+            color: var(--accent-color);
+            letter-spacing: 10px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .doc-meta {
+            text-align: right;
+            font-size: 0.9rem;
+            color: var(--highlight);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Jura', sans-serif;
+            color: var(--highlight);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        h2 { font-size: 2.2rem; margin-top: 4rem; color: #86efac; }
+        h3 { font-size: 1.4rem; color: var(--accent-color); border: none; }
+        
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+            align-items: start;
+        }
+
+        .text-column {
+            text-align: justify;
+        }
+
+        .sidebar {
+            background-color: rgba(6, 78, 59, 0.2);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+
+
+        /* Images */
+        .retro-img-container {
+            background: #000;
+            padding: 5px;
+            border: 2px solid var(--border-color);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .retro-img-container::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(74, 222, 128, 0.1) 2px, rgba(74, 222, 128, 0.1) 4px);
+            pointer-events: none;
+        }
+
+        .retro-img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: contrast(120%) saturate(80%);
+        }
+
+        .caption {
+            color: var(--accent-color);
+            font-family: 'Courier Prime', monospace;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+
+
+        /* Tables */
+        .stat-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .stat-table th, .stat-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: left;
+        }
+
+        .stat-table th {
+            background-color: var(--paper-color);
+            color: var(--highlight);
+            width: 40%;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.85rem;
+            border: 2px solid var(--border-color);
+            background: rgba(0,0,0,0.4);
+        }
+        
+        .data-table th, .data-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .data-table th {
+            background-color: var(--border-color);
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .alert-box {
+            border-left: 4px solid var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+            padding: 1rem;
+            margin: 2rem 0;
+            font-weight: bold;
+            color: #fca5a5;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        @media print {
+            body { background: white; color: black; padding: 0; }
+            .document-container { box-shadow: none; border: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="document-container">
+        <div class="header-block">
+            <h1 class="company-logo"><a href="index.html" style="color: inherit; text-decoration: none;">INHUME</a></h1>
+            <div class="doc-meta">
+                <div>ARCHIVE ID: INH-77X-92</div>
+                <div>STATUS: CLASSIFIED</div>
+                <div>SUBJECT: GLOBAL RECONNAISSANCE</div>
+                <div style="margin-top: 10px;"><a href="index.html" style="color: var(--accent-color); text-decoration: underline;">[ RETURN TO MAIN TERMINAL ]</a></div>
+            </div>
+        </div>
+
+        <!-- Sector Map Section -->
+        <div style="margin-bottom: 5rem; text-align: center; background: rgba(0,0,0,0.4); padding: 2rem; border: 1px dashed var(--accent-color);">
+            <h3>SATELLITE SECTOR SCHEMA // TOP-DOWN DISPATCH</h3>
+            <img src="map.png" alt="Sector Map" style="max-width: 100%; border: 2px solid var(--highlight); margin-top: 1rem; box-shadow: 0 0 30px rgba(34, 197, 94, 0.2);">
+        </div>
+
+        <div class="grid-layout">
+            <div class="text-column">
+                <h2>INCIDENT REPORT: THE ANOMALOUS SECTOR</h2>
+                <p>Initial survey of the designated sector revealed terrain generation inconsistent with known physical models. Massive, sheer spires of land rise vertically from a motionless dark, toxic ocean. This environment, internally referred to as the <strong>Voxel Archipelago</strong>, defies traditional geological formation.</p>
+                
+                <div class="alert-box">
+                    WARNING: Environmental Toxicity Levels are Critical. Exposure to the ocean triggers the "Drowning Paradox" event.
+                </div>
+
+                <p>The island chains appear to shift algorithmically. Navigation relies entirely on line-of-sight and corporate-issued compass arrays which frequently fail. The water is inhabited. Do not engage without heavy ordnance.</p>
+                
+                <table class="stat-table">
+                    <tr><th colspan="2" style="text-align:center;">ENVIRONMENTAL HAZARDS</th></tr>
+                    <tr><th>Toxicity Level</th><td>94.2% (Corrosive)</td></tr>
+                    <tr><th>Atmosphere</th><td>Heavy Fog / Spores</td></tr>
+                    <tr><th>Voxel Instability</th><td>High Variance</td></tr>
+                    <tr><th>Extraction Status</th><td>Offline</td></tr>
+                </table>
+            </div>
+            
+            <div class="sidebar">
+                <div class="retro-img-container">
+                    <img src="605855459_869246712155426_5123750989642651270_n.jpg" alt="Archipelago">
+                    <div class="caption">CAM-04: Deep Sea Spire Formation</div>
+                </div>
+                <table class="stat-table">
+                    <tr><th colspan="2" style="text-align:center;">SECTOR DATA</th></tr>
+                    <tr><th>Zone Status</th><td>Quarantined</td></tr>
+                    <tr><th>Hazard Level</th><td>Omega-Class</td></tr>
+                    <tr><th>Terrain Type</th><td>Voxel / Industrial Ruins</td></tr>
+                    <tr><th>Worker Survival Rate</th><td>8.1%</td></tr>
+                </table>
+            </div>
+        </div>
+
+
+
+        <h2>I. TAXONOMY OF THE INHUMED</h2>
+        <p>The local fauna has undergone severe speculative evolution. Below is a compiled taxonomy of verified entities. Field agents must memorize these profiles.</p>
+
+        <!-- DOERH -->
+        <div class="grid-layout">
+            <div class="sidebar">
+                <div class="retro-img-container">
+                    <img src="NewDoerh.png" alt="The Doerh">
+                    <div class="caption">Subject ID: The Doerh</div>
+                </div>
+                <table class="stat-table">
+                    <tr><th colspan="2" style="text-align:center;">HARVEST YIELD</th></tr>
+                    <tr><th>Biomass</th><td>700 kg</td></tr>
+                    <tr><th>Industrial Value</th><td>Low</td></tr>
+                    <tr><th>Usable Organs</th><td>Ocular Fluid (Toxic)</td></tr>
+                </table>
+            </div>
+            <div class="text-column">
+                <h3>Entity: THE DOERH</h3>
+                <p>A towering, lumbering humanoid entity. Its most distinguishing feature is the complete absence of a distinct head or neck; instead, a massive human face spans the entirety of its rounded torso. Note the bulky legs, large hands, and shiny big eyes.</p>
+                <table class="stat-table">
+                    <tr><th>Classification</th><td>Giant / Terrestrial Mutagen</td></tr>
+                    <tr><th>Behavior</th><td>Territorial, Melancholic</td></tr>
+                    <tr><th>Threat Level</th><td>High (Blunt Force)</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- DOERH VARIANT -->
+        <div class="grid-layout">
+            <div class="text-column">
+                <h3>Sub-species: THE BELL-BODY DOERH</h3>
+                <p>A rare structural variant of the standard Doerh. Unlike the primary specimen, the facial features are recessed into a conical, metallic-textured upper torso resembling an industrial bell. This variant exhibits elongated, spindly limbs and is typically found in deep subterranean maintenance tunnels.</p>
+                <table class="stat-table">
+                    <tr><th>Classification</th><td>Giant / Subterranean Variant</td></tr>
+                    <tr><th>Behavior</th><td>Passive, Observation-Focused</td></tr>
+                    <tr><th>Threat Level</th><td>Moderate (Acoustic Shock)</td></tr>
+                </table>
+            </div>
+            <div class="sidebar">
+                <div class="retro-img-container">
+                    <img src="doerh_variant.png" alt="Doerh Bell Variant">
+                    <div class="caption">Subject ID: Bell-Body Variant</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DROWNED -->
+        <div class="grid-layout">
+            <div class="text-column">
+                <h3>Entity: THE DROWNED</h3>
+                <p>Victims of the Drowning Paradox. Heavily armored entities, encased entirely in deep-sea coral and rusty scrap. They wield crude, hardened spears made from ship wreckage.</p>
+                <table class="stat-table">
+                    <tr><th>Classification</th><td>Corrupted / Aquatic</td></tr>
+                    <tr><th>Behavior</th><td>Hostile, Relentless</td></tr>
+                    <tr><th>Threat Level</th><td>Severe</td></tr>
+                </table>
+            </div>
+            <div class="sidebar">
+                <div class="retro-img-container">
+                    <img src="ps1_drowned.png" alt="The Drowned">
+                    <div class="caption">Subject ID: The Drowned</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WHISPERSPINE -->
+        <div class="grid-layout">
+            <div class="sidebar">
+                <div class="retro-img-container">
+                    <img src="ps1_whisperspine.png" alt="Whisperspine">
+                    <div class="caption">Subject ID: Whisperspine</div>
+                </div>
+            </div>
+            <div class="text-column">
+                <h3>Entity: WHISPERSPINE</h3>
+                <p>An incredibly thin creature with a backward-bending spine. Navigates using echolocation and mimics proximity chat to lure victims into the dark.</p>
+                <table class="stat-table">
+                    <tr><th>Classification</th><td>Aberrant / Mimic</td></tr>
+                    <tr><th>Behavior</th><td>Stalking</td></tr>
+                    <tr><th>Threat Level</th><td>Extreme</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- SALT AND DOUGH -->
+        <div class="grid-layout">
+            <div class="text-column">
+                <h3>Entity: BEING OF SALT AND DOUGH</h3>
+                <p>A conical entity composed of lumpy dough and sharp crystals. Moves silently across the voxel terrain, performing undecipherable rituals near toxic waste.</p>
+                <table class="stat-table">
+                    <tr><th>Classification</th><td>Construct / Ritualistic</td></tr>
+                    <tr><th>Behavior</th><td>Docile unless interrupted</td></tr>
+                    <tr><th>Threat Level</th><td>Moderate</td></tr>
+                </table>
+            </div>
+            <div class="sidebar">
+                <div class="retro-img-container">
+                    <img src="ps1_salt_dough.png" alt="Salt and Dough">
+                    <div class="caption">Subject ID: Salt & Dough</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- THE SLUG -->
+        <div class="grid-layout">
+            <div class="sidebar">
+                <div class="retro-img-container">
+                    <img src="boat.png" alt="The Slug placeholder">
+                    <div class="caption">Subject ID: The Slug</div>
+                </div>
+            </div>
+            <div class="text-column">
+                <h3>Entity: THE SLUG</h3>
+                <p>A three-meter-tall molluscan humanoid that has evolved to thrive in the Bio-Sludge Atolls. Originally the result of experimental 'Waste Management' organisms, these creatures consumed enough human DNA from the cafeteria runoff to develop a terrifyingly inquisitive face.</p>
+                <table class="stat-table">
+                    <tr><th>Classification</th><td>Marine / Mutagenic</td></tr>
+                    <tr><th>Behavior</th><td>Chemical Sifting, Inquisitive</td></tr>
+                    <tr><th>Threat Level</th><td>Moderate (Corrosive Mucus)</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- FUNGI PEOPLE -->
+        <div class="grid-layout">
+            <div class="text-column">
+                <h3>Entity: FUNGI PEOPLE</h3>
+                <p>The most varied and communal threat in the archipelago. They do not eat; they digest the atmosphere. Their presence is usually signaled by a sweet, rot-like smell. They communicate through subsonic 'pings' and gather in hundreds to 'compost' intruders.</p>
+                <table class="stat-table">
+                    <tr><th>Classification</th><td>Spore-Cycle / Global</td></tr>
+                    <tr><th>Behavior</th><td>Collective Composting</td></tr>
+                    <tr><th>Threat Level</th><td>Low (Swarm Risk)</td></tr>
+                </table>
+            </div>
+            <div class="sidebar">
+                <div class="retro-img-container">
+                    <img src="character.png" alt="Fungi People placeholder">
+                    <div class="caption">Subject ID: Fungi People</div>
+                </div>
+            </div>
+        </div>
+
+        <h2>II. COMBAT & ENCOUNTER PROTOCOLS</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Entity Code</th>
+                    <th>Common Name</th>
+                    <th>Engagement Range</th>
+                    <th>Authorized Action</th>
+                    <th>Expected Mortality</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>DRW-01</td><td>The Drowned</td><td>&lt; 50 meters</td><td>Retreat to High Ground</td><td>80%</td></tr>
+                <tr><td>DOE-04</td><td>The Doerh</td><td>&lt; 100 meters</td><td>Deploy Distraction Flare</td><td>40%</td></tr>
+                <tr><td>WSP-99</td><td>Whisperspine</td><td>Audio Contact Only</td><td>Apply Earplugs, Evacuate</td><td>95%</td></tr>
+                <tr><td>SAD-12</td><td>Being of Salt and Dough</td><td>&lt; 10 meters</td><td>Maintain Observation</td><td>5%</td></tr>
+            </tbody>
+        </table>
+
+        <div style="border-top: 1px dashed var(--border-color); padding-top: 2rem; margin-top: 4rem;">
+            <h2 style="margin-top: 4rem; text-align: center;">III. FIELD TRANSCRIPT: LOGISTICS OF THE DAMNED</h2>
+            
+            <div style="max-width: 900px; margin: 0 auto;">
+                <p style="text-align: center; color: var(--highlight); font-style: italic;">Recovered Archive: April 30, 2026 // Lead Systems Architect<br>
+                Status: RECONSTRUCTED FROM FRAGMENTED DATA TAPES</p>
+
+                <h3>CHAPTER 1: THE KOLYMA-PACIFIC CONTRACT</h3>
+                <p>The Kolyma-Pacific Archipelago was never meant to be a permanent home. To the outside world, it was an ambitious deep-sea oil and mining venture. To the administrative mainframe of The Company, it was designated as Classified Zone 4: a 32x32km laboratory for the most aggressive experiments in corporate history.</p>
+                <p>The labor force for Zone 4 was not recruited from prestigious universities or elite military units. Instead, The Company targeted the ”Deprived”. These were individuals from separate fields whose specialized skills were as valuable as they were expendable.</p>
+                
+                <ul style="list-style-type: square; color: #6ee7b7; padding-left: 1.5rem;">
+                    <li><strong>The Night-Club Guard:</strong> Hired for their passive ability, ”Unflinching Presence,” allowing them to body-block threats without knockback.</li>
+                    <li><strong>The Plumber:</strong> A ”Pocket Engineer” capable of highlighting valves and wires, essential for maintaining the subterranean infrastructure.</li>
+                    <li><strong>The Deep Diver:</strong> Trained to work ”Under Pressure” without oxygen, claiming comfort in the silence of the dark.</li>
+                    <li><strong>The Fast Food Employee:</strong> Valued for their ”Happy Meal” passive, providing sanity recovery even in the most unsettling nautical environments.</li>
+                </ul>
+
+                <h3>CHAPTER 1.4: THE EXTRACTION MANDATE</h3>
+                <p>Workers were told their primary mission was the recovery of copper wire and classified scavenged logs. They were informed that ”The cargo fights back,” and that the extraction was the boss fight.</p>
+                <p>This narrative was a mask. The Company didn’t send Unit 5 to save the world; they sent them because their replacement was already on the helicopter. You were never the hero; you were a budget line item.</p>
+
+                <h3>CHAPTER 2: LIFE IN THE ATOLLS</h3>
+                <p>Before the Tuesday Incident, the Kolyma-Pacific Archipelago was a monument to the mundane. The Company utilized ”Voxel Stamping” to nest hand-crafted residential and commercial prefabs into the procedural hillsides. To the personnel, these islands were not a military zone, but a series of ”Company Towns” designed to simulate a life of routine in an otherwise hostile environment.</p>
+                
+                <p><strong>The Architecture of Mundanity:</strong> Life in the Atolls was an exercise in the ”Art of the Fake.” The buildings—barracks, fast-food joints, and supply hubs—were constructed as modular prefabs. This stylized architecture allowed the Company to maintain a ”goofy” silhouette for character recognition while bathing the environment in gritty, atmospheric lighting to mask the underlying decay.</p>
+
+                <h3>CHAPTER 3: THE CLASSIFIED MANDATE</h3>
+                <p>While the Atolls provided a hollow simulation of comfort, the islands’ foundations were rotting with industrial secrets. Beyond the ”Logistics of the Damned” visible to the low-level workers, the Company executed a classified mandate that viewed the laws of physics and ethics as mere variables to be exploited for a higher bottom line.</p>
+                
+                <p><strong>The Subterranean Breach:</strong> The deep-sea drilling project was never intended for oil extraction; it was a focused search for a ”Pocket of Non-Space” located deep within the voxel crust. Experimental thermal-cutting tools were used to pierce the bedrock, regardless of the geological instability reported by the Plumber teams.</p>
+
+                <h3>CHAPTER 4: THE 03:00 ALARM</h3>
+                <p>The transition from a ”Cozy Horror” tension to a literal nightmare occurred at precisely 03:00 on a Tuesday. The ”Tuesday Incident” was not a single explosion, but a localized rupture of physics that occurred when the deep-crust drill at the center of the archipelago pierced a pocket of non-space.</p>
+                <p>To the workers on the graveyard shift, the first sign was not sound, but the sky—the horizon turned a permanent, sickly emerald glow, and the radioactive green fog became so thick it physically muffled the sound of the emergency sirens.</p>
+
+                <h3>CHAPTER 5: THE SANITIZATION PROTOCOL</h3>
+                <p>The Company’s response to the Tuesday Incident was governed by a single guiding principle: ”You are not the hero. You are a budget line item.” While the personnel in the Atolls looked to the sea for rescue, the Executives were already executing the Sanitization Protocol.</p>
+                <p><strong>The Executive Flight:</strong> The evacuation was never intended for the labor force. As reality destabilized, the wealthy managers and lead scientists boarded private helicopters and sealed the facilities behind them. The heavy blast doors of the bunkers were locked from the outside, trapping the workforce in sectors that were rapidly being overtaken by mutated flora and radioactive fauna.</p>
+
+                <h3>CHAPTER 6: THE GHOST IN THE MACHINE</h3>
+                <p>As the official Company communications went dark, the surviving personnel utilized their technical skills to hack the 1980s CRT terminals scattered across the ruins. They transformed the archipelago’s infrastructure of deception into a desperate survivor network known as the **BBS Network**.</p>
+                <p><strong>The Credit Economy:</strong> Survivors utilized magnetic corporate ID badges to track a localized digital currency, trading ”Credits” for essential survival items like D-Cell batteries and fuel. Terminals are now used to post contracts between survivors, ranging from plumbing repairs in toxic sectors to the dangerous retrieval of classified data tapes.</p>
+
+                <h3>CHAPTER 7: FIELD TAXONOMY SUMMARY</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Entity Name</th>
+                            <th>Classification</th>
+                            <th>Primary Biome</th>
+                            <th>Threat</th>
+                            <th>Key Behavior</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Drowned</td><td>Benthic / Industrial</td><td>Sinking Silos</td><td>High</td><td>Heavy Melee / Sentries</td></tr>
+                        <tr><td>Slug</td><td>Marine / Mutagenic</td><td>Bio-Sludge Atolls</td><td>Moderate</td><td>Chemical Sifting</td></tr>
+                        <tr><td>Fungi People</td><td>Spore-Cycle</td><td>Global (High Humidity)</td><td>Low/Swarm</td><td>Collective Composting</td></tr>
+                        <tr><td>Whisperspine</td><td>Acoustic Stalker</td><td>Dark / Silent Sectors</td><td>Moderate</td><td>Mimetic Voice Hijacking</td></tr>
+                        <tr><td>Salt and Dough</td><td>Alchemical Husk</td><td>Residential Ruins</td><td>Low</td><td>Radar Interference</td></tr>
+                        <tr><td>Doerh</td><td>Fused Management</td><td>Industrial Ring</td><td>Extreme</td><td>Performance Audit Stun</td></tr>
+                        <tr><td>Argemione</td><td>Radiotrophic Fauna</td><td>Ground Zero</td><td>Neutral</td><td>Heavy Metal Filtering</td></tr>
+                        <tr><td>Moss Monkey</td><td>Surface Scavenger</td><td>Ash Perimeter</td><td>Friendly</td><td>Battery/Scrip Trading</td></tr>
+                    </tbody>
+                </table>
+
+                <!-- BIOME 1: ASH PERIMETER -->
+                <div class="grid-layout" style="margin-top: 4rem;">
+                    <div class="text-column">
+                        <h3>CHAPTER 10: THE ASH PERIMETER (TIER 1)</h3>
+                        <p>The outermost ring represents the ”Great Deception.” It is the most deceptively ”normal” sector, serving as the buffer between the infinite water blockade and the industrial rot of the interior.</p>
+                        <p>The islands are characterized by low-sloping hills and monochrome beaches. The ground is composed of a soft, shifting carpet of gray soot, often several meters deep. This ”soot-soil” acts as a natural acoustic dampener; footsteps are swallowed entirely, creating an eerie, unnatural silence.</p>
+                        <p>The weather is defined by the ”Dry Rain”—a constant, heavy fallout of radioactive ash. The sky is a perpetual twilight of bruised purple and charcoal gray. Visibility is moderately high, but the air is biologically abrasive.</p>
+                    </div>
+                    <div class="sidebar">
+                        <div class="retro-img-container">
+                            <img src="ash_perimeter.png" alt="Ash Perimeter Biome">
+                            <div class="caption">SECTOR-01: THE ASH PERIMETER</div>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--danger); border: 1px solid var(--danger); padding: 5px; text-align: center;">
+                            WARNING: ASH-INHALATION RISK HIGH
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BIOME 2: SINKING SILOS -->
+                <div class="grid-layout" style="margin-top: 4rem;">
+                    <div class="sidebar">
+                        <div class="retro-img-container">
+                            <img src="sinking_silos.png" alt="Sinking Silos Biome">
+                            <div class="caption">SECTOR-02: THE SINKING SILOS</div>
+                        </div>
+                    </div>
+                    <div class="text-column">
+                        <h3>CHAPTER 11: THE SINKING SILOS (TIER 2)</h3>
+                        <p>As the player pushes inward, the soft soot gives way to the brutalist concrete and rusted iron of Tier 2. This is the industrial engine of the Company, now collapsing under the weight of its own failures.</p>
+                        <p>During the Tuesday Incident, the spacetime rupture at Ground Zero caused a ”Density Sink,” where the bedrock physically liquefied. Multi-ton concrete silos are actively, albeit slowly, sinking into the voxel seabed.</p>
+                        <p>The atmosphere is a thick, dark soup of oil mist and radioactive vapor. The water reflects a sickly emerald glow from the sky. The humidity is highly corrosive; untreated steel boat hulls will show visible pitting within hours.</p>
+                    </div>
+                </div>
+
+                <!-- BIOME 3: CRYO-WASTES -->
+                <div class="grid-layout" style="margin-top: 4rem;">
+                    <div class="text-column">
+                        <h3>CHAPTER 12: THE CRYO-WASTES (TIER 3)</h3>
+                        <p>Tier 3 represents a sudden and violent shift. The transition from the emerald heat of the Silos to the sub-zero permafrost of the Wastes is instantaneous, marked by the ”Coolant Line Wall.”</p>
+                        <p>The islands here are jagged pillars of frozen voxel-mud, ice, and scrap metal. The ground is slick with ”Black Ice”—a mixture of frozen oil and seawater. The terrain is filled with deep ice-cracks and ”Cold-Welded” ruins where industrial equipment has been fused into the ice in mid-operation.</p>
+                        <p>The weather is a relentless, high-pressure blizzard. The howling winds create ”Audio Isolation,” making it impossible to hear anything more than a meter away—a state weaponized by the Whisperspine.</p>
+                    </div>
+                    <div class="sidebar">
+                        <div class="retro-img-container">
+                            <img src="cryo_wastes.png" alt="Cryo-Wastes Biome">
+                            <div class="caption">SECTOR-03: THE CRYO-WASTES</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BIOME 4: GROUND ZERO -->
+                <div class="grid-layout" style="margin-top: 4rem;">
+                    <div class="sidebar">
+                        <div class="retro-img-container">
+                            <img src="ground_zero.png" alt="Ground Zero Biome">
+                            <div class="caption">SECTOR-00: GROUND ZERO</div>
+                        </div>
+                    </div>
+                    <div class="text-column">
+                        <h3>CHAPTER 13: GROUND ZERO (THE HEART)</h3>
+                        <p>The center of the archipelago is no longer part of our reality. It is the site of the original 1988 breach, where the Company’s greed finally pierced the veil of non-space.</p>
+                        <p>The islands are a pulsating, deep-red nightmare of bio-organic fusion. The sand has been vitrified into ”Voxel Glass”—jagged, translucent shards that glow with inner rhythmic light. Gravity here is merely a suggestion; water flows in reverse spirals, and boulders drift lazily through the air.</p>
+                        <p>The sky is a permanent, swirling tear in reality. Spacetime hazards are constant; survivors may experience ”Time-Slips” or ”Position-Swaps” where they are suddenly teleported several meters in a random direction.</p>
+                    </div>
+                </div>
+
+                <h3>CHAPTER 14: THE HUMAN DEBRIS (RECOVERED LOGS)</h3>
+                <div style="background: rgba(0,0,0,0.3); border-left: 2px solid var(--accent-color); padding: 1.5rem; margin: 2rem 0;">
+                    <p><strong>Audio Log: Cassette #088-B (Recovered from Silo 4)</strong></p>
+                    <p style="font-style: italic; color: #a5f3fc;">”It’s... it’s still Tuesday, isn’t it? The watch says Tuesday. The terminal says Tuesday. But I’ve been in this crawlspace for at least forty hours. The pressure valves aren’t whistling anymore; they’re screaming. And it’s not steam. It’s this green... mist. It smells like copper and old meat... Something is coming up through the pipes. It’s got too many fingers.”</p>
+                </div>
+
+                <h3>CHAPTER 15: THE ESCAPE THEORY</h3>
+                <p>Within the BBS network, the ”Secret Brokers” trade in the ”Escape Theory”—the speculative science of how to breach the Company’s infinite blockade. They maintain that the naval blockade is a ”Signature-Based” system. The only way to leave is to physically alter your boat’s ”Signature” at the Central Mainframe.</p>
+                <p><strong>The Drowning Paradox:</strong> The Brokers hypothesize that the outer radius is a spacetime ”loop.” When a vessel reaches the 16km mark without the proper ”Clock Out” code, the anomaly simply resets the vessel’s position to 100 meters below the surface. You don’t sink; you are simply repositioned into the abyss.</p>
+
+                <p style="text-align: center; margin-top: 4rem; color: var(--danger); font-weight: bold; border: 1px solid var(--danger); padding: 1rem;">
+                    — END OF RECORD —<br>
+                    PROPERTY OF THE COMPANY. UNAUTHORIZED REPRODUCTION WILL RESULT IN IMMEDIATE TERMINATION.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div style="text-align: center; color: var(--border-color); margin-top: 4rem; font-size: 0.8rem;">
+            DOCUMENT END. UNAUTHORIZED REPRODUCTION WILL RESULT IN IMMEDIATE TERMINATION.
+        </div>
+    </div>
+</body>
+</html>
